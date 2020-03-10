@@ -10,6 +10,7 @@ public class Greep extends Creature
 {
     // Remember: you cannot extend the Greep's memory. So:
     // no additional fields (other than final fields) allowed in this class!
+    private boolean atTomato;
     
     /**
      * Default constructor for testing purposes.
@@ -17,6 +18,7 @@ public class Greep extends Creature
     public Greep()
     {
         this(null);
+        
     }
     
     /**
@@ -33,19 +35,49 @@ public class Greep extends Creature
     public void act()
     {
         super.act();   // do not delete! leave as first statement in act().
+        
+        
+        
+        if (atWater() || isAtEdge())
+        {
+            turn(180);
+        }
+        
         if (carryingTomato()) {
+            
+            
             if (atShip()) {
                 dropTomato();
             }
             else {
+                move();
                 turnHome();
                 move();
+                
             }
+            
         }
         else {
-            move();
+            //move();
             checkFood();
         }
+        
+        if (isTouching(TomatoPile.class))
+            {
+                atTomato = true;
+                spit("red");
+                
+            }
+            else
+            {
+                move();
+                
+                if(atTomato)
+                {
+                    Actor dq = (Actor)getWorld().getObjects(Paint.class).get(0);
+                    turnTowards(dq.getX(), dq.getY());
+                }
+            }
     }
     
     /**
@@ -57,9 +89,11 @@ public class Greep extends Creature
         TomatoPile tomatoes = (TomatoPile) getOneIntersectingObject(TomatoPile.class);
         if (tomatoes != null) {
             loadTomato();
+            
             // Note: this attempts to load a tomato onto *another* Greep. It won't
             // do anything if we are alone here.
         }
+        
     }
 
     /**
@@ -67,7 +101,7 @@ public class Greep extends Creature
      */
     public static String getAuthorName()
     {
-        return "Anonymous";  // write your name here!
+        return "Dillon Sumner";  // write your name here!
     }
 
     /**
